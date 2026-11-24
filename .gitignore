@@ -13,3 +13,5 @@ sample_video*.mp4
 Thumbs.db
 desktop.ini
 *.log
+
+push_to_github.bat
