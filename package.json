@@ -14,7 +14,7 @@
     "ffmpeg"
   ],
   "author": "Vela",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "devDependencies": {
     "electron": "^45.4.1",
     "rcedit": "^5.0.2"

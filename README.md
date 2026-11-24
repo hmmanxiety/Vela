@@ -80,4 +80,5 @@ npm run build
 ---
 
 ## 📄 License
-MIT License.
+Copyright © 2026 hmmanxiety. All Rights Reserved.  
+This project is proprietary. Unauthorized copying, distribution, or commercial use is strictly prohibited.
