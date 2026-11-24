@@ -35,5 +35,7 @@ contextBridge.exposeInMainWorld('velaAPI', {
   saveStore: (data) => ipcRenderer.invoke('store:save', data),
   showInFolder: (filePath) => ipcRenderer.invoke('system:show-in-folder', filePath),
   getSiblingVideos: (filePath) => ipcRenderer.invoke('folder:get-sibling-videos', filePath),
-  fetchLyrics: (params) => ipcRenderer.invoke('media:fetch-lyrics', params)
+  fetchLyrics: (params) => ipcRenderer.invoke('media:fetch-lyrics', params),
+  checkUpdates: () => ipcRenderer.invoke('app:check-updates'),
+  openExternal: (url) => ipcRenderer.invoke('system:open-external', url)
 });

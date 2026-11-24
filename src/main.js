@@ -652,3 +652,66 @@ ipcMain.handle('media:fetch-lyrics', async (event, { filePath, title, artist, al
     return { found: false, synced: false, lyrics: null };
   }
 });
+
+// ==================== GITHUB AUTO-UPDATE & RELEASE ENGINE ====================
+function compareSemver(v1, v2) {
+  const p1 = (v1 || '').replace(/[^0-9.]/g, '').split('.').map(Number);
+  const p2 = (v2 || '').replace(/[^0-9.]/g, '').split('.').map(Number);
+  for (let i = 0; i < Math.max(p1.length, p2.length); i++) {
+    const num1 = p1[i] || 0;
+    const num2 = p2[i] || 0;
+    if (num1 > num2) return 1;
+    if (num1 < num2) return -1;
+  }
+  return 0;
+}
+
+ipcMain.handle('app:check-updates', async () => {
+  try {
+    const packageJson = require('../package.json');
+    const currentVersion = packageJson.version || '1.0.0';
+
+    const res = await fetch('https://api.github.com/repos/hmmanxiety/Vela/releases/latest', {
+      headers: {
+        'User-Agent': `Vela-Media-Player/${currentVersion}`,
+        'Accept': 'application/vnd.github.v3+json'
+      },
+      signal: AbortSignal.timeout(6500)
+    });
+
+    if (res.ok) {
+      const release = await res.json();
+      const latestTag = release.tag_name || '';
+      const isUpdateAvailable = compareSemver(latestTag, currentVersion) > 0;
+
+      return {
+        success: true,
+        updateAvailable: isUpdateAvailable,
+        currentVersion: 'v' + currentVersion.replace(/^v/, ''),
+        latestVersion: latestTag.startsWith('v') ? latestTag : ('v' + latestTag),
+        releaseName: release.name || latestTag,
+        changelog: release.body || 'No release notes provided.',
+        releaseUrl: release.html_url || 'https://github.com/hmmanxiety/Vela/releases'
+      };
+    } else if (res.status === 404) {
+      // Repository has no releases published yet
+      return {
+        success: true,
+        updateAvailable: false,
+        currentVersion: 'v' + currentVersion.replace(/^v/, ''),
+        latestVersion: 'v' + currentVersion.replace(/^v/, ''),
+        message: 'No releases published yet.'
+      };
+    } else {
+      return { success: false, error: `GitHub API returned ${res.status}` };
+    }
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+});
+
+ipcMain.handle('system:open-external', async (event, url) => {
+  if (url && (url.startsWith('https://') || url.startsWith('http://'))) {
+    return shell.openExternal(url);
+  }
+});

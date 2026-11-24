@@ -503,8 +503,70 @@
           <span class="meta-val" id="info-val-dropped">0 frames</span>
         </div>
       </div>
+
+      <!-- App Version & Update Status (Bottom of Info Drawer as Requested) -->
+      <div class="info-app-footer">
+        <div class="app-version-row">
+          <div class="app-version-info">
+            <span class="app-version-label">App Version</span>
+            <span class="app-version-badge" id="info-app-version">v1.0.0</span>
+          </div>
+          <button class="check-update-btn" id="check-update-btn" title="Check for updates on GitHub">
+            <svg class="check-spin-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+            </svg>
+            <span id="update-btn-text">Check for updates</span>
+          </button>
+        </div>
+        <div class="app-update-status" id="info-update-status">Up to date</div>
+      </div>
     </div>
   </aside>
+
+  <!-- Mandatory Update Modal Pop-out -->
+  <div class="update-modal-backdrop" id="update-modal-backdrop" style="display: none;">
+    <div class="update-modal-card">
+      <div class="update-modal-header">
+        <div class="update-icon-glow">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+        </div>
+        <div class="update-header-text">
+          <div class="update-badge">NEW UPDATE REQUIRED</div>
+          <h3 class="update-title" id="update-modal-title">New Vela Version Available</h3>
+        </div>
+      </div>
+
+      <div class="update-modal-body">
+        <div class="update-version-strip">
+          <span class="update-ver-tag curr">Current: <strong id="update-curr-version">v1.0.0</strong></span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+          <span class="update-ver-tag new">Latest: <strong id="update-new-version">v1.1.0</strong></span>
+        </div>
+
+        <div class="update-changelog-box">
+          <div class="changelog-label">What's New & Improvements:</div>
+          <div class="changelog-text" id="update-changelog-text"></div>
+        </div>
+      </div>
+
+      <div class="update-modal-actions">
+        <button class="update-action-btn primary" id="update-action-download">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+          <span>Update Now (GitHub)</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- Toast Notification -->
   <div class="toast-capsule" id="toast">

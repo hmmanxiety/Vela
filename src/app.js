@@ -2553,6 +2553,115 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // ==================== GITHUB AUTO-UPDATE & RELEASE NOTIFIER ====================
+  const infoAppVersion = document.getElementById('info-app-version');
+  const checkUpdateBtn = document.getElementById('check-update-btn');
+  const updateBtnText = document.getElementById('update-btn-text');
+  const infoUpdateStatus = document.getElementById('info-update-status');
+  const updateModalBackdrop = document.getElementById('update-modal-backdrop');
+  const updateModalTitle = document.getElementById('update-modal-title');
+  const updateCurrVersion = document.getElementById('update-curr-version');
+  const updateNewVersion = document.getElementById('update-new-version');
+  const updateChangelogText = document.getElementById('update-changelog-text');
+  const updateActionDownload = document.getElementById('update-action-download');
+
+  let latestReleaseUrl = 'https://github.com/hmmanxiety/Vela/releases';
+  let isCheckingUpdate = false;
+
+  async function checkAppUpdates(isManual = false) {
+    if (!window.velaAPI || !window.velaAPI.checkUpdates) return;
+    if (isCheckingUpdate) return;
+    isCheckingUpdate = true;
+
+    if (checkUpdateBtn) checkUpdateBtn.classList.add('checking');
+    if (updateBtnText) updateBtnText.textContent = 'Checking...';
+    if (infoUpdateStatus) infoUpdateStatus.textContent = 'Checking GitHub...';
+
+    try {
+      const res = await window.velaAPI.checkUpdates();
+      if (res && res.success) {
+        if (infoAppVersion && res.currentVersion) {
+          infoAppVersion.textContent = res.currentVersion;
+        }
+
+        if (res.updateAvailable) {
+          latestReleaseUrl = res.releaseUrl || latestReleaseUrl;
+          if (infoUpdateStatus) {
+            infoUpdateStatus.textContent = `New update ${res.latestVersion} available!`;
+            infoUpdateStatus.classList.add('has-update');
+          }
+          showUpdateModal(res);
+        } else {
+          if (infoUpdateStatus) {
+            infoUpdateStatus.textContent = 'You are on the latest version';
+            infoUpdateStatus.classList.remove('has-update');
+          }
+          if (isManual) {
+            showToast(`Vela is up to date (${res.currentVersion || 'v1.0.0'}) ✨`);
+          }
+        }
+      } else {
+        if (infoUpdateStatus) {
+          infoUpdateStatus.textContent = 'Could not check updates';
+        }
+        if (isManual) {
+          showToast('Could not reach GitHub releases');
+        }
+      }
+    } catch (err) {
+      console.warn('Update check error:', err);
+      if (infoUpdateStatus) infoUpdateStatus.textContent = 'Check failed';
+    } finally {
+      isCheckingUpdate = false;
+      if (checkUpdateBtn) checkUpdateBtn.classList.remove('checking');
+      if (updateBtnText) updateBtnText.textContent = 'Check for updates';
+    }
+  }
+
+  function showUpdateModal(releaseInfo) {
+    if (!updateModalBackdrop) return;
+
+    if (mainVideo && !mainVideo.paused) {
+      mainVideo.pause();
+    }
+
+    if (updateModalTitle) {
+      updateModalTitle.textContent = `Vela ${releaseInfo.latestVersion} is available!`;
+    }
+    if (updateCurrVersion) {
+      updateCurrVersion.textContent = releaseInfo.currentVersion || 'v1.0.0';
+    }
+    if (updateNewVersion) {
+      updateNewVersion.textContent = releaseInfo.latestVersion;
+    }
+    if (updateChangelogText) {
+      updateChangelogText.textContent = releaseInfo.changelog || 'Performance improvements and bug fixes.';
+    }
+
+    updateModalBackdrop.style.display = 'flex';
+  }
+
+  if (checkUpdateBtn) {
+    checkUpdateBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      checkAppUpdates(true);
+    });
+  }
+
+  if (updateActionDownload) {
+    updateActionDownload.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (window.velaAPI && window.velaAPI.openExternal) {
+        window.velaAPI.openExternal(latestReleaseUrl);
+      }
+    });
+  }
+
+  // Automatic check 2.5s after launch
+  setTimeout(() => {
+    checkAppUpdates(false);
+  }, 2500);
+
   // ==================== TRIM MODE (Image 3) ====================
   function enterTrimMode() {
     closeAllMenus();
