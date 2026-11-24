@@ -1,0 +1,22 @@
+{
+  "name": "vela",
+  "version": "1.0.0",
+  "description": "Vela",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [
+    "media-player",
+    "video-trimmer",
+    "mpv",
+    "fluent-ui",
+    "ffmpeg"
+  ],
+  "author": "Vela",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^45.4.1",
+    "rcedit": "^5.0.2"
+  }
+}

@@ -1,0 +1,1815 @@
+/* VELA - Deeper Espresso Design System • Flat Matte Monochrome */
+:root {
+  /* Deeper Espresso Color Tokens */
+  --bg-app: #120908;
+  --bg-topbar: #170C0A;
+  --bg-surface: #1F100E;
+  --btn-default: #2C1815;
+  --btn-hover: #402420;
+  --text-primary: #F2ECE7;
+  --text-secondary: #7A635E;
+  --divider: #261411;
+
+  /* Smooth Spring */
+  --spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --smooth-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+  outline: none;
+}
+
+body.vela-root {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI Variable Text", "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  outline: none;
+}
+
+/* ==================== TOP BAR (Flat Matte Tonal) ==================== */
+.app-top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background-color: var(--bg-topbar);
+  border-bottom: 1px solid var(--divider);
+  z-index: 60;
+  -webkit-app-region: drag;
+  opacity: 1;
+  transition: opacity 0.3s var(--smooth-ease);
+}
+
+.controls-hidden .app-top-bar {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.top-bar-left, .top-bar-center, .top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  -webkit-app-region: no-drag;
+}
+
+/* Minimalist Circular Logo Badge (No Text) */
+.brand-logo-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 5px;
+  transition: transform 0.2s var(--spring-bounce);
+}
+
+.brand-logo-circle:hover {
+  transform: scale(1.08);
+}
+
+.logo-circle-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.header-divider {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.video-file-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  max-width: 480px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Trim Tab in Top Bar */
+.trim-tab-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding: 5px 18px;
+  background-color: var(--btn-default);
+  border-radius: 16px;
+}
+
+.trim-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tonal-action-btn {
+  background-color: var(--btn-default);
+  color: var(--text-primary);
+  border: 1px solid var(--divider);
+  padding: 6px 16px;
+  border-radius: 16px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s var(--spring-bounce);
+}
+
+.tonal-action-btn:hover {
+  background-color: var(--btn-hover);
+  transform: scale(1.04);
+}
+
+.tonal-action-btn:active {
+  transform: scale(0.96);
+}
+
+/* Frameless Window Controls */
+.window-controls-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 10px;
+  -webkit-app-region: no-drag !important;
+  z-index: 70;
+}
+
+.win-btn {
+  width: 42px;
+  height: 34px;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-app-region: no-drag !important;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+  user-select: none;
+}
+
+.win-btn svg {
+  pointer-events: none;
+}
+
+.win-btn:hover {
+  background-color: var(--btn-default);
+  color: #ffffff;
+}
+
+.win-btn:active {
+  transform: scale(0.96);
+}
+
+.win-btn.win-close:hover {
+  background-color: #c42b1c;
+  color: #ffffff;
+}
+
+/* ==================== VIDEO VIEWPORT CANVAS ==================== */
+.player-canvas {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-color: var(--bg-app);
+  overflow: hidden;
+}
+
+.video-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+video#main-video {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.26s var(--smooth-ease), opacity 0.26s ease;
+  will-change: transform, opacity;
+}
+
+video#main-video.dragging {
+  transition: none !important;
+}
+
+/* Side Navigation Chevrons (Movies & TV Style Previous / Next Video) */
+.nav-chevron {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 64px;
+  border-radius: 8px;
+  background-color: rgba(44, 24, 21, 0.72);
+  border: 1px solid rgba(122, 99, 94, 0.25);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 45;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s var(--smooth-ease), transform 0.2s var(--spring-bounce), background-color 0.15s ease;
+}
+
+.video-container:hover .nav-chevron {
+  opacity: 0.85;
+  pointer-events: auto;
+}
+
+.nav-chevron:hover {
+  opacity: 1 !important;
+  background-color: var(--btn-hover);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.nav-chevron:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.nav-chevron.disabled {
+  opacity: 0.25 !important;
+  pointer-events: none !important;
+}
+
+.nav-chevron-prev {
+  left: 14px;
+}
+
+.nav-chevron-next {
+  right: 14px;
+}
+
+.controls-hidden .nav-chevron {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Video Transition Floating Card */
+.video-switch-card {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--divider);
+  border-radius: 12px;
+  padding: 8px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 50;
+  transition: opacity 0.2s ease, transform 0.2s var(--spring-bounce);
+}
+
+.video-switch-card.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.switch-badge {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+}
+
+.switch-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  max-width: 420px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Play Ripple */
+.play-ripple-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 30;
+}
+
+.play-ripple-overlay.pop {
+  opacity: 1;
+}
+
+.ripple-circle {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background-color: var(--btn-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  transform: scale(0.7);
+  transition: transform 0.3s var(--spring-bounce);
+}
+
+.play-ripple-overlay.pop .ripple-circle {
+  transform: scale(1.05);
+}
+
+/* Empty Drop Zone */
+.empty-glass-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-app);
+  z-index: 25;
+}
+
+.empty-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  max-width: 400px;
+  padding: 36px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--divider);
+  border-radius: 24px;
+}
+
+.empty-logo-badge {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: var(--text-primary);
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.empty-logo-badge img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.subtext {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* ==================== NORMAL PLAYBACK CONTROLS (Compact & Low Profile) ==================== */
+.bottom-controls-surface {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--divider);
+  padding: 6px 20px 8px 20px; /* Reduced vertical padding */
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* Tight compact gap */
+  z-index: 50;
+  opacity: 1;
+  transition: opacity 0.3s var(--smooth-ease);
+}
+
+.controls-hidden .bottom-controls-surface {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.title-status-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: -1px;
+}
+
+.title-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  opacity: 0.85;
+  max-width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 3px Timeline Scrubber Bar */
+.scrubber-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.time-readout {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  min-width: 48px;
+}
+
+.right-align {
+  text-align: right;
+}
+
+.scrubber-track {
+  flex: 1;
+  height: 3px; /* Exactly 3px scrubber track */
+  background-color: var(--text-secondary);
+  border-radius: 1.5px;
+  position: relative;
+  cursor: pointer;
+  transition: height 0.15s ease;
+}
+
+/* Extended hit area so dragging and holding is effortless */
+.scrubber-track::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  bottom: -10px;
+  left: 0;
+  right: 0;
+  cursor: pointer;
+}
+
+.scrubber-track:hover,
+.scrubber-track.dragging {
+  height: 5px;
+}
+
+.scrubber-played {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: var(--text-primary);
+  border-radius: 1.5px;
+  width: 0%;
+}
+
+.scrubber-handle {
+  position: absolute;
+  top: 50%;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background-color: var(--text-primary);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.15s var(--spring-bounce);
+  cursor: grab;
+  z-index: 5;
+}
+
+.scrubber-track:hover .scrubber-handle,
+.scrubber-track.dragging .scrubber-handle {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+.scrubber-track.dragging .scrubber-handle {
+  cursor: grabbing;
+}
+
+/* Bottom Toolbar (Pixel-Perfect Dead Center) */
+.toolbar-flex {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 38px; /* Compact height */
+  margin-top: 1px;
+}
+
+.tools-cluster {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Tight compact gap */
+}
+
+.cluster-left {
+  z-index: 2;
+}
+
+/* 36px Circular Transport Buttons dead center */
+.cluster-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 5;
+}
+
+.cluster-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 2;
+}
+
+/* ==================== PLAYBACK SPEED CONTROLLER (Left of Pencil) ==================== */
+.speed-control-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--btn-default);
+  border: 1px solid var(--divider);
+  padding: 3px 10px;
+  border-radius: 18px;
+  margin-right: 4px;
+  user-select: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.2s ease;
+}
+
+.speed-control-container:hover, .speed-control-container.active {
+  background-color: var(--btn-hover);
+  border-color: rgba(122, 99, 94, 0.4);
+}
+
+.speed-pill-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 11.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 10px;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.speed-pill-btn:hover {
+  color: #ffffff;
+}
+
+.speed-pill-btn span {
+  display: inline-block;
+  transition: transform 0.15s ease-out;
+}
+
+.speed-pill-btn span.pop {
+  transform: scale(1.06);
+}
+
+.speed-slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.speed-tick-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  min-width: 24px;
+  text-align: center;
+}
+
+.speed-track-container {
+  position: relative;
+  width: 115px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.speed-track-bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: var(--divider);
+  border-radius: 2px;
+}
+
+/* Center Detent / Anchor Notch (1.0x Base) */
+.speed-center-detent {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 2px;
+  height: 9px;
+  background-color: var(--text-secondary);
+  border-radius: 1px;
+  z-index: 2;
+  pointer-events: none;
+  transition: height 0.2s var(--spring-bounce), background-color 0.2s ease, transform 0.2s var(--spring-bounce);
+}
+
+.speed-center-detent.centered {
+  height: 14px;
+  background-color: var(--text-primary);
+  transform: translate(-50%, -50%) scaleX(1.3);
+}
+
+/* Active Departure Fill from Center (50%) */
+.speed-active-fill {
+  position: absolute;
+  top: 8.5px;
+  height: 3px;
+  background-color: var(--text-primary);
+  border-radius: 2px;
+  z-index: 1;
+  pointer-events: none;
+  width: 0px;
+  left: 50%;
+  transition: left 0.28s cubic-bezier(0.16, 1, 0.3, 1), width 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: left, width;
+}
+
+.speed-active-fill.dragging {
+  transition: none !important;
+}
+
+/* Draggable Thumb Handle (Liquid Smooth Apple Spring) */
+.speed-thumb-handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background-color: var(--text-primary);
+  box-shadow: 0 0 0 2px var(--bg-surface), 0 2px 5px rgba(0, 0, 0, 0.5);
+  cursor: grab;
+  z-index: 3;
+  transition: left 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: left, transform;
+}
+
+.speed-thumb-handle:hover {
+  transform: translate(-50%, -50%) scale(1.22);
+}
+
+.speed-thumb-handle:active, .speed-thumb-handle.dragging {
+  cursor: grabbing;
+  transform: translate(-50%, -50%) scale(1.32);
+  transition: transform 0.15s ease !important;
+}
+
+/* Circular Tonal Buttons */
+.tonal-btn-44 {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: var(--btn-default);
+  border: none;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.15s ease, transform 0.2s var(--spring-bounce);
+}
+
+.tonal-btn-44:hover {
+  background-color: var(--btn-hover);
+  transform: scale(1.08);
+}
+
+.tonal-btn-44:active {
+  transform: scale(0.92);
+}
+
+/* Standard Tonal Icon Button (Reduced size 32px) */
+.tonal-icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--btn-default);
+  border: none;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.2s var(--spring-bounce);
+}
+
+.tonal-icon-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.tonal-icon-btn:hover {
+  background-color: var(--btn-hover);
+  transform: scale(1.08);
+}
+
+.tonal-icon-btn:active {
+  transform: scale(0.92);
+}
+
+/* Skip 10s Vector Buttons (Crystal clear vector SVG) */
+.circular-skip {
+  width: 38px;
+  height: 38px;
+}
+
+.skip-svg {
+  width: 22px;
+  height: 22px;
+  fill: var(--text-primary);
+  display: block;
+}
+
+/* Hero Play Button */
+.hero-play-btn {
+  width: 44px;
+  height: 44px;
+  background-color: var(--btn-default);
+}
+
+.hero-play-btn svg {
+  width: 24px;
+  height: 24px;
+  fill: var(--text-primary);
+  display: block;
+}
+
+#play-main-icon {
+  margin-left: 2px;
+}
+
+.hero-play-btn:hover {
+  background-color: var(--btn-hover);
+}
+
+/* Volume Slider */
+.volume-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cozy-slider {
+  width: 65px;
+  height: 2.5px;
+  accent-color: var(--text-primary);
+  background: var(--text-secondary);
+  cursor: pointer;
+}
+
+.volume-val-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  min-width: 28px;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+  transition: color 0.15s ease, opacity 0.15s ease;
+}
+
+.volume-val-label.muted {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+/* ==================== POPUP MENU ==================== */
+.popup-anchor {
+  position: relative;
+}
+
+@keyframes menuPopIn {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.94);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.cozy-spring-menu {
+  position: absolute;
+  bottom: 50px;
+  right: 0;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--divider);
+  border-radius: 14px;
+  padding: 6px;
+  min-width: 220px;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 120;
+  transform-origin: bottom right;
+}
+
+.cozy-spring-menu.active {
+  display: flex;
+  animation: menuPopIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.tonal-icon-btn.menu-open {
+  background-color: var(--btn-hover);
+  color: var(--text-primary);
+}
+
+.menu-choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.menu-choice:hover {
+  background-color: var(--btn-default);
+}
+
+.menu-choice svg {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.menu-choice:hover svg {
+  color: var(--text-primary);
+}
+
+.menu-divider-line {
+  height: 1px;
+  background-color: var(--divider);
+  margin: 4px 6px;
+}
+
+/* ==================== TRIM MODE SURFACE ==================== */
+.trim-controls-surface {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--divider);
+  padding: 10px 24px 12px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 55;
+}
+
+.floating-pill-badge {
+  background-color: var(--btn-default);
+  border: 1px solid var(--divider);
+  border-radius: 8px;
+  padding: 4px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: monospace;
+  color: var(--text-primary);
+}
+
+.trim-track-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.trim-readout {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: monospace;
+  color: var(--text-primary);
+  min-width: 60px;
+}
+
+.trim-interactive-rail {
+  flex: 1;
+  height: 36px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.rail-background {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: var(--text-secondary);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.rail-highlight {
+  position: absolute;
+  top: 16px;
+  height: 4px;
+  background-color: var(--text-primary);
+  border-radius: 2px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Bracket Handles [ and ] */
+.bracket-handle {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 26px;
+  background-color: var(--btn-default);
+  border: 1px solid var(--text-secondary);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  cursor: ew-resize;
+  z-index: 25;
+  transition: background-color 0.15s ease, transform 0.15s var(--spring-bounce);
+  user-select: none;
+}
+
+.bracket-handle:hover, .bracket-handle.dragging {
+  background-color: var(--btn-hover);
+  border-color: var(--text-primary);
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+.bracket-symbol {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* Playhead Needle (White vertical line + top dot) */
+.playhead-needle {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: ew-resize;
+  z-index: 20;
+  pointer-events: auto;
+  user-select: none;
+  transition: transform 0.15s ease;
+}
+
+.playhead-needle:hover, .playhead-needle.dragging {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+.needle-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--text-primary);
+  box-shadow: 0 0 0 2px var(--bg-surface), 0 2px 4px rgba(0, 0, 0, 0.4);
+  margin-bottom: -1px;
+  pointer-events: none;
+}
+
+.needle-stem {
+  width: 2.5px;
+  height: 20px;
+  background-color: var(--text-primary);
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+/* Toast */
+.toast-capsule {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--divider);
+  border-radius: 14px;
+  padding: 10px 22px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  z-index: 300;
+  opacity: 0;
+  transition: transform 0.25s var(--spring-bounce), opacity 0.2s ease;
+}
+
+.toast-capsule.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* ==================== INFO SIDE SLIDE DRAWER (Image 1) ==================== */
+.drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 95;
+}
+
+.drawer-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.side-slide-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  max-width: 92vw;
+  height: 100vh;
+  background-color: rgba(22, 12, 10, 0.95);
+  backdrop-filter: blur(32px) saturate(180%);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.65);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 28px;
+  overflow-y: auto;
+  transform: translateX(105%);
+  transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.side-slide-drawer.open {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.drawer-title-capsule {
+  display: inline-flex;
+  align-items: center;
+  background: var(--btn-default);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 6px 18px;
+  border-radius: 18px;
+  letter-spacing: 0.3px;
+}
+
+.drawer-close-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9E8E8B;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.drawer-close-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-primary);
+  transform: scale(1.06);
+}
+
+.drawer-close-btn:active {
+  transform: scale(0.94);
+}
+
+.drawer-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: #8E807D;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.info-meta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.meta-row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.meta-label {
+  width: 95px;
+  flex-shrink: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #8E807D;
+}
+
+.meta-val {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+/* ==================== AUDIO VINYL RECORD PLAYER STAGE ==================== */
+.audio-vinyl-stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-app);
+  z-index: 25;
+  padding: 48px 32px 108px 32px;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.3s var(--smooth-ease);
+}
+
+.audio-vinyl-stage.active {
+  opacity: 1;
+}
+
+/* Beat-Reactive Musical Notes Canvas */
+.vinyl-notes-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 8;
+}
+
+/* Subtle warm ambient glow behind turntable */
+.audio-stage-ambient {
+  position: absolute;
+  top: 40%;
+  left: 38%;
+  transform: translate(-50%, -50%);
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196, 132, 108, 0.08) 0%, rgba(44, 24, 21, 0.04) 50%, transparent 75%);
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.vinyl-stage-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(40px, 7vw, 100px);
+  max-width: 1080px;
+  width: 100%;
+}
+
+/* ==================== TURNTABLE & VINYL DISC ==================== */
+.turntable-deck {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Turntable Platter Base Ring */
+.turntable-platter {
+  position: relative;
+  width: clamp(280px, 34vw, 420px);
+  height: clamp(280px, 34vw, 420px);
+  border-radius: 50%;
+  background: radial-gradient(circle, #1F100E 0%, #170C0A 70%, #0E0605 100%);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(122, 99, 94, 0.2),
+    inset 0 0 18px rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Realistic Vinyl Record Disc */
+.vinyl-disc {
+  position: relative;
+  width: 92%;
+  height: 92%;
+  border-radius: 50%;
+  background-color: #0c0908;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.8),
+    inset 0 0 6px rgba(0, 0, 0, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: spinVinyl 6s linear infinite;
+  animation-play-state: paused;
+  will-change: transform;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.vinyl-disc:active {
+  cursor: grabbing;
+}
+
+.vinyl-disc.scratching {
+  animation: none !important;
+  cursor: grabbing !important;
+}
+
+.tonearm-assembly.scratching {
+  transition: none !important;
+}
+
+.vinyl-disc.playing {
+  animation-play-state: running;
+}
+
+@keyframes spinVinyl {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Concentric Vinyl Grooves Layer */
+.vinyl-groove-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle,
+    rgba(32, 22, 20, 0.85) 0px,
+    rgba(32, 22, 20, 0.85) 1px,
+    rgba(12, 9, 8, 0.95) 2px,
+    rgba(12, 9, 8, 0.95) 3px
+  );
+  pointer-events: none;
+}
+
+/* Dual-Cone Specular Sheen (Vinyl Light Reflection) */
+.vinyl-sheen-cone {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 35deg,
+    rgba(255, 255, 255, 0.08) 0deg,
+    rgba(255, 255, 255, 0.015) 30deg,
+    transparent 65deg,
+    transparent 180deg,
+    rgba(255, 255, 255, 0.08) 215deg,
+    rgba(255, 255, 255, 0.015) 245deg,
+    transparent 280deg,
+    transparent 360deg
+  );
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+/* Vinyl Center Label (Vela Espresso & Warm Terracotta) */
+.vinyl-center-label {
+  position: relative;
+  width: 34%;
+  height: 34%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #2C1815 0%, #20110F 85%, #170C0A 100%);
+  border: 2px solid rgba(196, 132, 108, 0.45);
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+.vinyl-label-outer-ring {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  border-radius: 50%;
+  border: 1px dashed rgba(196, 132, 108, 0.35);
+  pointer-events: none;
+}
+
+.vinyl-label-inner-ring {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(196, 132, 108, 0.2);
+  pointer-events: none;
+}
+
+.vinyl-label-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  z-index: 3;
+}
+
+.vinyl-label-logo {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  opacity: 0.9;
+}
+
+.vinyl-label-brand {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #F2ECE7;
+  text-transform: uppercase;
+}
+
+.vinyl-label-sub {
+  font-size: 7.5px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #C4846C;
+}
+
+/* Center Spindle Hole with Metallic Rim */
+.vinyl-spindle-hole {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #0E0605;
+  border: 1.5px solid #5A433E;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9);
+  z-index: 6;
+}
+
+/* ==================== TONEARM & CARTRIDGE NEEDLE ==================== */
+.tonearm-assembly {
+  position: absolute;
+  top: -24px;
+  right: -24px;
+  width: 140px;
+  height: 220px;
+  pointer-events: none;
+  z-index: 12;
+  transform-origin: 32px 32px;
+  transform: rotate(26deg);
+  transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.tonearm-assembly.paused {
+  transform: rotate(8deg);
+}
+
+/* Pivot Base / Gimbal */
+.tonearm-base {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #5A433E 0%, #301E1B 65%, #1F100E 100%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(122, 99, 94, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tonearm-weight {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8E7B77 0%, #402925 100%);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.tonearm-gimbal {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #C4846C;
+}
+
+/* Metallic Curved Arm Wand */
+.tonearm-arm {
+  position: absolute;
+  top: 32px;
+  left: 30px;
+  width: 4.5px;
+  height: 150px;
+  border-radius: 3px;
+  background: linear-gradient(to right, #9F8D89 0%, #D8CCC8 50%, #6E5752 100%);
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.5);
+  transform-origin: top center;
+  transform: rotate(-12deg);
+}
+
+/* Headshell & Stylus Needle */
+.tonearm-headshell {
+  position: absolute;
+  bottom: 22px;
+  left: 60px;
+  width: 14px;
+  height: 28px;
+  border-radius: 2px 2px 4px 4px;
+  background: linear-gradient(145deg, #38201B 0%, #1A0C0A 100%);
+  border: 1px solid rgba(196, 132, 108, 0.4);
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.6);
+  transform: rotate(18deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tonearm-cartridge {
+  width: 10px;
+  height: 12px;
+  background: #C4846C;
+  border-radius: 1px;
+  margin-top: 3px;
+}
+
+.tonearm-stylus {
+  width: 2px;
+  height: 5px;
+  background: #F2ECE7;
+  border-radius: 1px;
+  margin-top: 3px;
+  box-shadow: 0 0 4px #C4846C;
+}
+
+/* ==================== RIGHT SIDE TRACK & ARTWORK CARD ==================== */
+.audio-track-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: clamp(320px, 34vw, 420px);
+  width: 100%;
+}
+
+/* Album Sleeve with Peeking Mini Disc (Image Reference) */
+.audio-art-sleeve-wrap {
+  position: relative;
+  width: clamp(170px, 20vw, 220px);
+  height: clamp(170px, 20vw, 220px);
+  margin-bottom: 14px;
+}
+
+/* Peeking Vinyl Disc */
+.audio-art-peeking-disc {
+  position: absolute;
+  top: 6px;
+  right: -24px;
+  width: 94%;
+  height: 94%;
+  border-radius: 50%;
+  background: #0E0A09;
+  box-shadow: 4px 10px 25px rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: spinVinyl 6s linear infinite;
+  animation-play-state: paused;
+  z-index: 1;
+}
+
+.audio-art-peeking-disc.playing {
+  animation-play-state: running;
+}
+
+.peeking-disc-grooves {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle,
+    rgba(35, 24, 22, 0.8) 0px,
+    rgba(35, 24, 22, 0.8) 1px,
+    rgba(14, 10, 9, 0.95) 2px,
+    rgba(14, 10, 9, 0.95) 3px
+  );
+}
+
+.peeking-disc-center {
+  position: relative;
+  width: 32%;
+  height: 32%;
+  border-radius: 50%;
+  background: #C4846C;
+  border: 1px solid rgba(242, 236, 231, 0.4);
+  z-index: 2;
+}
+
+/* Front Cover Box */
+.audio-art-cover-box {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  background: var(--bg-surface);
+  border: 1px solid rgba(122, 99, 94, 0.25);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.audio-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Fallback Vela Artwork */
+.audio-cover-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: linear-gradient(145deg, #2C1815 0%, #1A0C0A 100%);
+  color: var(--text-primary);
+}
+
+.fallback-vinyl-badge {
+  color: #C4846C;
+  opacity: 0.9;
+}
+
+.fallback-brand-text {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #F2ECE7;
+  text-transform: uppercase;
+}
+
+/* Metadata Text Information */
+.audio-track-meta {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.audio-meta-header-row {
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.audio-track-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 230px;
+  letter-spacing: -0.2px;
+}
+
+.audio-track-duration {
+  font-size: 14px;
+  font-weight: 600;
+  color: #C4846C;
+  font-feature-settings: "tnum";
+  flex-shrink: 0;
+}
+
+.audio-meta-artist-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.audio-meta-by {
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.audio-track-artist {
+  font-size: 14px;
+  font-weight: 500;
+  color: #E5A890;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 240px;
+}
+
+.audio-meta-album-row {
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280px;
+}
+
+/* ==================== SPOTIFY-STYLE SYNCHRONIZED LYRICS ==================== */
+.audio-lyrics-container {
+  width: 100%;
+  height: clamp(140px, 20vh, 220px);
+  margin-top: 14px;
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 82%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 82%, transparent 100%);
+  user-select: text;
+}
+
+.audio-lyrics-container::-webkit-scrollbar {
+  display: none;
+}
+
+.lyrics-scroll-track {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 35px 0 60px 0;
+  min-height: 100%;
+}
+
+.lyrics-line {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Inter, Roboto, sans-serif;
+  font-size: clamp(16px, 1.7vw, 21px);
+  font-weight: 700;
+  line-height: 1.34;
+  letter-spacing: -0.3px;
+  color: rgba(229, 168, 144, 0.40);
+  cursor: pointer;
+  transform-origin: left center;
+  transition: color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, color, opacity;
+  padding: 2px 0;
+}
+
+.lyrics-line:hover {
+  color: rgba(242, 236, 231, 0.85);
+}
+
+.lyrics-line.active {
+  color: #FFFFFF;
+  opacity: 1;
+  transform: scale(1.025);
+  text-shadow: 0 0 16px rgba(229, 168, 144, 0.35);
+}
+
+.lyrics-line.passed {
+  color: rgba(229, 168, 144, 0.25);
+}
+
+.lyrics-placeholder {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: rgba(242, 236, 231, 0.45);
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 16px 0;
+}
+
+.lyrics-loading-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #C4846C;
+  animation: pulseDot 1.4s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { transform: scale(0.8); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 1; }
+}

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VELA</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="vela-root" tabindex="-1">
+  <!-- Top Floating Borderless Window Bar -->
+  <header class="app-top-bar" id="app-top-bar">
+    <div class="top-bar-left">
+      <!-- Minimalist Circular Logo Badge (No Text) -->
+      <div class="brand-logo-circle" id="brand-pill" title="VELA">
+        <img src="../assets/logo_128.png" alt="VELA" class="logo-circle-img">
+      </div>
+      <span class="header-divider">•</span>
+      <span class="video-file-title" id="header-file-name">sample_video.mp4</span>
+    </div>
+
+    <!-- Trim Mode Centered Tab -->
+    <div class="top-bar-center" id="window-center-tab" style="display: none;">
+      <div class="trim-tab-pill">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="6" cy="6" r="3"></circle>
+          <circle cx="6" cy="18" r="3"></circle>
+          <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
+          <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
+          <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
+        </svg>
+        <span>Trim</span>
+      </div>
+    </div>
+
+    <div class="top-bar-right">
+      <!-- Trim Actions -->
+      <div class="trim-header-actions" id="trim-top-actions" style="display: none;">
+        <button class="tonal-action-btn btn-save-copy" id="trim-save-copy-btn">Save as copy</button>
+        <button class="tonal-action-btn btn-cancel-trim" id="trim-cancel-top-btn">Cancel</button>
+      </div>
+
+      <!-- Frameless Native-style Window Controls Only -->
+      <div class="window-controls-group">
+        <button class="win-btn win-min" id="win-min-btn" title="Minimize">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+          </svg>
+        </button>
+        <button class="win-btn win-max" id="win-max-btn" title="Maximize / Restore">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+          </svg>
+        </button>
+        <button class="win-btn win-close" id="win-close-btn" title="Close">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Video Viewport Surface -->
+  <main class="player-canvas" id="player-canvas">
+    <div class="video-container" id="video-container">
+      <video id="main-video" preload="metadata"></video>
+
+      <!-- Side Navigation Chevrons (Movies & TV Style Previous / Next Video) -->
+      <button class="nav-chevron nav-chevron-prev" id="nav-prev-btn" title="Previous Media">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <button class="nav-chevron nav-chevron-next" id="nav-next-btn" title="Next Media">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+
+      <!-- Video Transition Indicator (Shows Next / Prev Video Title) -->
+      <div class="video-switch-card" id="video-switch-card">
+        <span class="switch-badge" id="switch-badge">Next Media</span>
+        <span class="switch-title" id="switch-title">media.mp4</span>
+      </div>
+
+      <!-- Center Play/Pause Ripple Overlay -->
+      <div class="play-ripple-overlay" id="play-ripple">
+        <div class="ripple-circle">
+          <svg id="ripple-icon" width="30" height="30" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Empty Drop Surface (if no file) -->
+      <div class="empty-glass-overlay" id="empty-drop-zone" style="display: none;">
+        <div class="empty-card">
+          <div class="empty-logo-badge">
+            <img src="../assets/logo_128.png" alt="VELA">
+          </div>
+          <h2>VELA Player</h2>
+          <p>Drag and drop a video or audio file here to play</p>
+          <button class="tonal-action-btn" id="empty-open-btn">Choose Media</button>
+          <span class="subtext">VELA Hi-Fi Media Engine • Lossless Trimming</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dedicated Vinyl Record Player Stage for Audio (MP3/WAV/FLAC/etc.) -->
+    <div class="audio-vinyl-stage" id="audio-vinyl-stage" style="display: none;">
+      <!-- Real-Time Beat-Reactive Musical Notes Particle Canvas -->
+      <canvas class="vinyl-notes-canvas" id="vinyl-notes-canvas"></canvas>
+
+      <!-- Subtle Ambient Lighting -->
+      <div class="audio-stage-ambient"></div>
+
+      <div class="vinyl-stage-inner">
+        <!-- Center / Left Turntable Section -->
+        <div class="turntable-deck" id="turntable-deck">
+          <!-- Turntable Platter Base -->
+          <div class="turntable-platter">
+            <!-- Realistic Vinyl Disc with Concentric Grooves & Sheen -->
+            <div class="vinyl-disc" id="vinyl-disc">
+              <div class="vinyl-sheen-cone"></div>
+              <div class="vinyl-groove-lines"></div>
+
+              <!-- Center Label Styled in Vela Espresso & Terracotta -->
+              <div class="vinyl-center-label">
+                <div class="vinyl-label-outer-ring"></div>
+                <div class="vinyl-label-inner-ring"></div>
+                <div class="vinyl-label-content">
+                  <img src="../assets/logo_128.png" alt="VELA" class="vinyl-label-logo">
+                  <span class="vinyl-label-brand">VELA</span>
+                  <span class="vinyl-label-sub" id="vinyl-label-speed">33 RPM</span>
+                </div>
+                <div class="vinyl-spindle-hole"></div>
+              </div>
+            </div>
+
+            <!-- Tonearm with Cartridge Needle Resting on Vinyl -->
+            <div class="tonearm-assembly" id="tonearm-assembly">
+              <div class="tonearm-base">
+                <div class="tonearm-weight"></div>
+                <div class="tonearm-gimbal"></div>
+              </div>
+              <div class="tonearm-arm"></div>
+              <div class="tonearm-headshell">
+                <div class="tonearm-cartridge"></div>
+                <div class="tonearm-stylus"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Album Artwork & Track Info Card (As Requested by User) -->
+        <div class="audio-track-card" id="audio-track-card">
+          <!-- Album Artwork Box with Vinyl Disc Peek (Image Reference) -->
+          <div class="audio-art-sleeve-wrap">
+            <!-- Mini Vinyl Disc Peeking from Behind Sleeve -->
+            <div class="audio-art-peeking-disc" id="peeking-disc">
+              <div class="peeking-disc-grooves"></div>
+              <div class="peeking-disc-center"></div>
+            </div>
+
+            <!-- Album Artwork Cover Box -->
+            <div class="audio-art-cover-box" id="audio-art-box">
+              <img id="audio-cover-img" class="audio-cover-img" src="../assets/logo_128.png" alt="Album Cover" style="display: none;">
+              <div class="audio-cover-fallback" id="audio-cover-fallback">
+                <div class="fallback-vinyl-badge">
+                  <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <circle cx="12" cy="12" r="6"></circle>
+                    <circle cx="12" cy="12" r="2" fill="currentColor"></circle>
+                  </svg>
+                </div>
+                <span class="fallback-brand-text">VELA HI-FI</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Track Metadata (Title, Duration, Artist "By ...", Album) -->
+          <div class="audio-track-meta">
+            <div class="audio-meta-header-row">
+              <h3 class="audio-track-title" id="audio-meta-title">No Track Loaded</h3>
+              <span class="audio-track-duration" id="audio-meta-duration">0:00</span>
+            </div>
+            <div class="audio-meta-artist-row" id="audio-artist-row">
+              <span class="audio-meta-by">By</span>
+              <span class="audio-track-artist" id="audio-meta-artist">Unknown Artist</span>
+            </div>
+            <div class="audio-meta-album-row" id="audio-album-row" style="display: none;">
+              <span class="audio-track-album" id="audio-meta-album"></span>
+            </div>
+          </div>
+
+          <!-- Spotify-Style Synchronized Lyrics View -->
+          <div class="audio-lyrics-container" id="audio-lyrics-container">
+            <div class="lyrics-scroll-track" id="lyrics-scroll-track">
+              <div class="lyrics-placeholder" id="lyrics-placeholder">
+                <span class="lyrics-loading-dot"></span>
+                <span class="lyrics-status-text" id="lyrics-status-text">Loading lyrics...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== NORMAL PLAYBACK CONTROLS (Tonal Stepping) ==================== -->
+    <div class="bottom-controls-surface" id="normal-controls">
+      <!-- Video Title Row -->
+      <div class="title-status-row">
+        <span class="title-text" id="bottom-video-title">sample_video.mp4</span>
+      </div>
+
+      <!-- 3px Timeline Scrubber Bar -->
+      <div class="scrubber-row">
+        <span class="time-readout" id="label-current-time">0:00:00</span>
+        <div class="scrubber-track" id="timeline-track">
+          <div class="scrubber-played" id="timeline-played"></div>
+          <div class="scrubber-handle" id="timeline-thumb"></div>
+        </div>
+        <span class="time-readout right-align" id="label-duration-time">0:00:15</span>
+      </div>
+
+      <!-- Bottom Tools Toolbar -->
+      <div class="toolbar-flex">
+        <!-- Left: Volume & Value -->
+        <div class="tools-cluster cluster-left">
+          <div class="volume-pill">
+            <button class="tonal-icon-btn" id="volume-mute-btn" title="Mute / Unmute (M)">
+              <svg id="volume-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              </svg>
+            </button>
+            <input type="range" class="cozy-slider" id="volume-slider" min="0" max="1" step="0.05" value="0.25">
+            <span class="volume-val-label" id="volume-val-label">25%</span>
+          </div>
+        </div>
+
+        <!-- Center: 10s Rewind, Play/Pause, 10s Forward (Pixel-Perfect Dead Center) -->
+        <div class="tools-cluster cluster-center">
+          <!-- Rewind 10s (High-Definition Vector) -->
+          <button class="tonal-btn-44 circular-skip" id="rewind-10-btn" title="Rewind 10 seconds (Left Arrow)">
+            <svg class="skip-svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8c0-4.42-3.58-8-8.01-8z"/>
+              <path d="M10.89 16h-.85v-3.26l-1.01.31v-.69l1.77-.63h.09V16z"/>
+              <path d="M15.17 14.24c0 .32-.03.6-.1.82s-.17.42-.29.57-.28.26-.45.33-.37.1-.59.1-.41-.03-.59-.1-.33-.18-.46-.33-.23-.34-.3-.57-.11-.5-.11-.82V13.5c0-.32.03-.6.1-.82s.17-.42.29-.57.28-.26.45-.33.37-.1.59-.1.41.03.59.1.33.18.46.33.23.34.3.57.11.5.11.82v.74zm-.85-.86c0-.19-.01-.35-.04-.48s-.07-.23-.12-.31-.11-.14-.19-.17-.16-.05-.25-.05-.18.02-.25.05-.14.09-.19.17-.09.18-.12.31-.04.29-.04.48v.97c0 .19.01.35.04.48s.07.24.12.32.11.14.19.17.16.05.25.05.18-.02.25-.05.14-.09.19-.17.09-.19.11-.32.04-.29.04-.48v-.97z"/>
+            </svg>
+          </button>
+
+          <!-- Play/Pause 44px Circular Button (High-Definition Vector) -->
+          <button class="tonal-btn-44 hero-play-btn" id="play-pause-btn" title="Play / Pause (Space)">
+            <svg id="play-main-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z"/>
+            </svg>
+            <svg id="pause-main-icon" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+              <path d="M8 19c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2v10c0 1.1.9 2 2 2zm6-12v10c0 1.1.9 2 2 2s2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2z"/>
+            </svg>
+          </button>
+
+          <!-- Forward 10s (High-Definition Vector) -->
+          <button class="tonal-btn-44 circular-skip" id="forward-10-btn" title="Forward 10 seconds (Right Arrow)">
+            <svg class="skip-svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18 13c0 3.31-2.69 6-6 6s-6-2.69-6-6 2.69-6 6-6v4l5-5-5-5v4c-4.42 0-8 3.58-8 8 0 4.42 3.58 8 8 8s8-3.58 8-8H18z"/>
+              <polygon points="10.86,15.94 10.86,11.67 10.77,11.67 9,12.3 9,12.99 10.01,12.68 10.01,15.94"/>
+              <path d="M12.25 13.44v.74c0 1.9 1.31 1.82 1.44 1.82.14 0 1.44.09 1.44-1.82v-.74c0-1.9-1.31-1.82-1.44-1.82-1.31 0-1.44-.09-1.44 1.82zm2.04-.12v.97c0 .77-.21 1.03-.59 1.03-.38 0-.6-.26-.6-1.03v-.97c0-.75.22-1.01.59-1.01.37 0 .6.27.6 1.01z"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Right: Speed Drag Slider, Pencil (Edit & Trim), PiP, Fullscreen, More -->
+        <div class="tools-cluster cluster-right">
+          <!-- Playback Speed Drag Slider (Left of Pencil, Center-detent anchor at 1.0x) -->
+          <div class="speed-control-container" id="speed-control-container">
+            <button class="speed-pill-btn" id="speed-pill-btn" title="Reset Speed to 1.0x">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span id="speed-pill-val">1.0x</span>
+            </button>
+            <div class="speed-slider-wrap" id="speed-slider-wrap">
+              <span class="speed-tick-label min">0.25</span>
+              <div class="speed-track-container" id="speed-track-container" title="Drag to adjust playback speed (Center is 1.0x)">
+                <div class="speed-track-bg"></div>
+                <!-- Center Anchor Detent (1.0x) -->
+                <div class="speed-center-detent" title="Base: 1.0x"></div>
+                <!-- Active Departure Fill from Center -->
+                <div class="speed-active-fill" id="speed-active-fill"></div>
+                <!-- Draggable Thumb Handle -->
+                <div class="speed-thumb-handle" id="speed-thumb-handle"></div>
+              </div>
+              <span class="speed-tick-label max">2.0</span>
+            </div>
+          </div>
+
+          <!-- Pencil / Edit button (Contains Trim & Tools) -->
+          <div class="popup-anchor">
+            <button class="tonal-icon-btn" id="pencil-edit-btn" title="Edit & Trim">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 20h9"></path>
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+              </svg>
+            </button>
+
+            <!-- Popup Menu with Trim at top -->
+            <div class="cozy-spring-menu" id="pencil-popup-menu">
+              <div class="menu-choice menu-choice-trim" id="menu-action-trim">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="6" cy="6" r="3"></circle>
+                  <circle cx="6" cy="18" r="3"></circle>
+                  <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
+                  <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
+                  <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
+                </svg>
+                <span>Trim</span>
+              </div>
+              <div class="menu-choice" id="menu-action-save-photo">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+                <span>Save photo from video</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mini View / PiP -->
+          <button class="tonal-icon-btn" id="pip-btn" title="Mini view / Picture in picture">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+              <rect x="12" y="10" width="8" height="8" rx="1"></rect>
+            </svg>
+          </button>
+
+          <!-- Fullscreen -->
+          <button class="tonal-icon-btn" id="fullscreen-btn" title="Full screen (F)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <polyline points="9 21 3 21 3 15"></polyline>
+              <line x1="21" y1="3" x2="14" y2="10"></line>
+              <line x1="3" y1="21" x2="10" y2="14"></line>
+            </svg>
+          </button>
+
+          <!-- More Options ... -->
+          <div class="popup-anchor">
+            <button class="tonal-icon-btn" id="more-options-btn" title="More options">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="5" cy="12" r="2"></circle>
+                <circle cx="12" cy="12" r="2"></circle>
+                <circle cx="19" cy="12" r="2"></circle>
+              </svg>
+            </button>
+            <div class="cozy-spring-menu" id="more-popup-menu">
+              <div class="menu-choice" id="menu-action-info">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <span>Info</span>
+              </div>
+              <div class="menu-choice" id="menu-open-file">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <span>Open File...</span>
+              </div>
+              <div class="menu-choice" id="menu-show-folder">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+                <span>Show in Windows Explorer</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TRIM MODE CONTROLS (Tonal Stepping) ==================== -->
+    <div class="trim-controls-surface" id="trim-controls" style="display: none;">
+      <!-- Floating time badge above scrubber (e.g. 00:16.16) -->
+      <div class="floating-pill-badge" id="trim-floating-badge">00:00.00</div>
+
+      <div class="trim-track-row">
+        <!-- Play/Pause in Trimmer (44px circular) -->
+        <button class="tonal-btn-44" id="trim-play-pause-btn" title="Preview Trim Range">
+          <svg id="trim-play-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z"/>
+          </svg>
+          <svg id="trim-pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+            <path d="M8 19c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2v10c0 1.1.9 2 2 2zm6-12v10c0 1.1.9 2 2 2s2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2z"/>
+          </svg>
+        </button>
+
+        <!-- Volume Controls in Trim Mode (Speaker + Slider + % Label) -->
+        <div class="volume-pill" id="trim-volume-cluster">
+          <button class="tonal-icon-btn" id="trim-mute-btn" title="Mute / Unmute (M)">
+            <svg id="trim-volume-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+          </button>
+          <input type="range" class="cozy-slider" id="trim-volume-slider" min="0" max="1" step="0.05" value="0.25">
+          <span class="volume-val-label" id="trim-volume-val-label">25%</span>
+        </div>
+
+        <span class="trim-readout" id="trim-label-start">00:00.00</span>
+
+        <!-- Draggable Bracket Track [ and ] -->
+        <div class="trim-interactive-rail" id="trim-slider-bar">
+          <div class="rail-background"></div>
+          <div class="rail-highlight" id="trim-selected-rail"></div>
+
+          <!-- Left Bracket [ -->
+          <div class="bracket-handle bracket-left" id="trim-handle-left" title="Start Point (Drag)">
+            <div class="bracket-symbol">[</div>
+          </div>
+
+          <!-- Playhead Needle with Top Dot -->
+          <div class="playhead-needle" id="trim-playhead" title="Playhead (Drag to seek)">
+            <div class="needle-dot"></div>
+            <div class="needle-stem"></div>
+          </div>
+
+          <!-- Right Bracket ] -->
+          <div class="bracket-handle bracket-right" id="trim-handle-right" title="End Point (Drag)">
+            <div class="bracket-symbol">]</div>
+          </div>
+        </div>
+
+        <span class="trim-readout" id="trim-label-end">00:15.00</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- Backdrop for side slide drawer -->
+  <div class="drawer-backdrop" id="drawer-backdrop"></div>
+
+  <!-- Right-side Info Slide Drawer (Image 1) -->
+  <aside class="side-slide-drawer" id="side-info-drawer" aria-label="Media Information">
+    <div class="drawer-header">
+      <div class="drawer-title-capsule">Info</div>
+      <button class="drawer-close-btn" id="drawer-close-btn" title="Close (Esc)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Info View Content -->
+    <div class="drawer-content" id="drawer-content-info">
+      <div class="info-section-title">NOW PLAYING</div>
+      
+      <div class="info-meta-list">
+        <div class="meta-row">
+          <span class="meta-label">File</span>
+          <span class="meta-val" id="info-val-file">-</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Duration</span>
+          <span class="meta-val" id="info-val-duration">0:00</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Video</span>
+          <span class="meta-val" id="info-val-video">-</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Pixel</span>
+          <span class="meta-val" id="info-val-pixel">d3d11 · bt.709 · bt.709/bt.1886</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Decoder</span>
+          <span class="meta-val" id="info-val-decoder">GPU (d3d11va)</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Renderer</span>
+          <span class="meta-val" id="info-val-renderer">gpu-next · d3d11</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Audio</span>
+          <span class="meta-val" id="info-val-audio">-</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">BPM</span>
+          <span class="meta-val" id="info-val-bpm">-</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Size</span>
+          <span class="meta-val" id="info-val-size">-</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Dropped</span>
+          <span class="meta-val" id="info-val-dropped">0 frames</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Toast Notification -->
+  <div class="toast-capsule" id="toast">
+    <div id="toast-message">Notification</div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

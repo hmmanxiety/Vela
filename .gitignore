@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Production builds & large binary executables (>100MB exceeds GitHub limit)
+release/
+bin/
+
+# Sample test media (if large)
+sample_video*.mp4
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
